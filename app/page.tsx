@@ -9,6 +9,9 @@ export default function Home() {
   const [revealLoading, setRevealLoading] = useState(false);
   const [revealError, setRevealError] = useState<string | null>(null);
 
+  const [sendLoading, setSendLoading] = useState(false);
+  const [sendResult, setSendResult] = useState<{ message: string; success: boolean } | null>(null);
+
   // Generate snowflakes for decoration
   useEffect(() => {
     const snowflakeCount = 30;
@@ -56,6 +59,44 @@ export default function Home() {
   const handleCloseReveal = () => {
     setRevealResult(null);
     setSelectedGiverId('');
+  };
+
+  // SMS/Email Blast Mode
+  const handleSendAssignments = async () => {
+    const confirmed = confirm(
+      'This will send Secret Santa assignments to all participants via SMS and/or email. Continue?'
+    );
+    if (!confirmed) return;
+
+    setSendLoading(true);
+    setSendResult(null);
+
+    try {
+      const response = await fetch('/api/send-assignments', {
+        method: 'POST',
+      });
+      const data = await response.json();
+      
+      if (data.ok) {
+        setSendResult({
+          message: data.message || 'Assignments sent successfully!',
+          success: true,
+        });
+      } else {
+        setSendResult({
+          message: data.message || 'Failed to send assignments.',
+          success: false,
+        });
+      }
+    } catch (error) {
+      setSendResult({
+        message: 'Error sending assignments. Please try again.',
+        success: false,
+      });
+      console.error(error);
+    } finally {
+      setSendLoading(false);
+    }
   };
 
   return (
@@ -183,6 +224,42 @@ export default function Home() {
               <p className="text-xs sm:text-sm text-gray-600 text-center italic px-2">
                 Make sure to hide this before the next person uses the app!
               </p>
+            </div>
+          )}
+        </section>
+
+        {/* SMS/Email Blast Section */}
+        <section className="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 md:mb-8 border-2 sm:border-4 border-christmas-red">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-christmas-red mb-3 sm:mb-4 md:mb-6 text-center">
+            📧 Send Assignments via SMS/Email
+          </h2>
+          <p className="text-sm sm:text-base text-gray-700 font-body mb-2 text-center px-2">
+            <strong>Host Only:</strong> Click the button below to send everyone their Secret Santa recipient via SMS and/or email.
+          </p>
+          <p className="text-xs sm:text-sm text-gray-600 font-body mb-4 sm:mb-6 text-center italic px-2">
+            Assignments will not be shown on screen.
+          </p>
+
+          {/* Send Button */}
+          <button
+            onClick={handleSendAssignments}
+            disabled={sendLoading}
+            className="w-full bg-gradient-to-r from-christmas-green to-christmas-darkGreen text-white text-lg sm:text-xl font-bold py-4 sm:py-5 rounded-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none touch-manipulation"
+          >
+            {sendLoading ? '📤 Sending...' : '📧 Send All Assignments'}
+          </button>
+
+          {/* Send Result */}
+          {sendResult && (
+            <div
+              className={`mt-4 sm:mt-6 p-3 sm:p-4 rounded-lg text-center text-base sm:text-lg font-semibold ${
+                sendResult.success
+                  ? 'bg-green-100 border-2 border-green-500 text-green-800'
+                  : 'bg-red-100 border-2 border-red-500 text-red-800'
+              }`}
+            >
+              {sendResult.success ? '✅ ' : '❌ '}
+              {sendResult.message}
             </div>
           )}
         </section>
