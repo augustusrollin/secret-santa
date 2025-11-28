@@ -28,10 +28,17 @@
   top: -10vh;
   color: white;
   font-size: 1em;
-  opacity: 0.8;
+  opacity: 0.6;
   pointer-events: none;
   z-index: 1;
   animation: snowfall linear infinite;
+}
+
+/* Hide some snowflakes on mobile for better performance */
+@media (max-width: 768px) {
+  .snowflake:nth-child(n+20) {
+    display: none;
+  }
 }
 
 /* Twinkling lights animation */
