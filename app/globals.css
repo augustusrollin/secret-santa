@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import festive Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Inter:wght@400;500;600;700&display=swap');
+
+/* Snowflake animation for background decoration */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.snowflake {
+  position: fixed;
+  top: -10vh;
+  color: white;
+  font-size: 1em;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 1;
+  animation: snowfall linear infinite;
+}
+
+/* Twinkling lights animation */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+/* Pulse animation for buttons */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.8);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Custom scrollbar for Christmas theme */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F4422;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C41E3A;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8B1A2F;
+}
+
+/* Base styles */
+body {
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0F4422 0%, #8B1A2F 50%, #0F4422 100%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Mountains of Christmas', cursive;
+}
+
